@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Building an AI-native Corp Dev Team | OpenAI</title>
+  <meta name="description" content="A private OpenAI-hosted Corp Dev working session on AI and Codex across real M&A workflows.">
+  <style>
+    :root {
+      --bg: #f6f9ff;
+      --fg: #05070b;
+      --muted: #5f6877;
+      --line: rgba(21, 40, 76, .12);
+      --blue: #2277ff;
+      --blue-deep: #1557c0;
+      --panel: #fff;
+      --wash: #edf5ff;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--fg);
+      background: radial-gradient(circle at 82% 4%, rgba(34,119,255,.12), transparent 28rem), linear-gradient(180deg,#fff 0%,var(--bg) 28rem,#fff 100%);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; }
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid rgba(34,119,255,.65); outline-offset: 3px; }
+    .hero {
+      min-height: 720px;
+      overflow: hidden;
+      padding: 28px clamp(20px,5vw,56px) 70px;
+      position: relative;
+      background: radial-gradient(circle at 78% 22%, rgba(34,119,255,.23), transparent 22rem), radial-gradient(circle at 72% 72%, rgba(157,203,255,.42), transparent 25rem), linear-gradient(180deg,#fff 0%,#f7fbff 54%,#edf5ff 100%);
+    }
+    .grid-overlay {
+      position: absolute;
+      inset: 0;
+      opacity: .85;
+      background-image: linear-gradient(rgba(21,87,192,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(21,87,192,.04) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: linear-gradient(180deg, black, transparent 80%);
+    }
+    .nav-shell, .hero-content, .section, .register-section { max-width: 1160px; margin: 0 auto; position: relative; z-index: 1; }
+    .nav-shell { display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+    .brand { font-size: 19px; font-weight: 700; }
+    .nav-button, .registration-form button {
+      min-height: 48px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 22px;
+      background: #05070b;
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 12px 28px rgba(5,7,11,.12);
+    }
+    .hero-content { display: grid; grid-template-columns: minmax(0,1.05fr) minmax(320px,.95fr); gap: 58px; align-items: center; padding-top: 122px; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 880px; margin-bottom: 30px; font-size: clamp(54px,8vw,108px); font-weight: 500; letter-spacing: -.045em; line-height: .9; }
+    .hero-subtitle { max-width: 680px; margin-bottom: 44px; color: rgba(5,7,11,.68); font-size: clamp(18px,2vw,22px); line-height: 1.55; }
+    .event-meta { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; max-width: 820px; }
+    .event-tile {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      min-height: 116px;
+      padding: 14px;
+      border: 1px solid rgba(21,40,76,.1);
+      border-radius: 16px;
+      background: rgba(255,255,255,.68);
+      box-shadow: 0 16px 44px rgba(26,62,122,.07);
+    }
+    a.event-tile:hover { border-color: rgba(34,119,255,.28); box-shadow: 0 18px 48px rgba(26,62,122,.12); transform: translateY(-1px); }
+    .event-tile svg, .icon-box svg { width: 25px; height: 25px; flex: 0 0 auto; fill: none; stroke: var(--blue-deep); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .event-tile span { display: grid; color: rgba(5,7,11,.58); font-size: 14px; line-height: 1.45; }
+    .event-tile strong { color: var(--fg); font-size: 15px; }
+    .codex-visual { min-height: 410px; position: relative; }
+    .glass-card { position: absolute; width: 310px; height: 250px; border: 1px solid rgba(34,119,255,.34); border-radius: 30px; background: linear-gradient(135deg, rgba(255,255,255,.72), rgba(134,191,255,.2)); box-shadow: 0 30px 80px rgba(24,91,197,.16); transform: perspective(700px) rotateY(-22deg) rotateX(6deg); }
+    .card-one { right: 0; top: 26px; }
+    .card-two { right: 74px; top: 72px; }
+    .card-three { right: 148px; top: 120px; }
+    .terminal-mark { position: absolute; right: 232px; top: 185px; display: flex; gap: 7px; align-items: center; justify-content: center; width: 96px; height: 96px; border-radius: 24px; background: linear-gradient(135deg,#0b54bc,#08264f); color: #b9dcff; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 42px; font-weight: 800; box-shadow: 0 24px 60px rgba(8,42,97,.24); }
+    .section { padding: 88px clamp(20px,5vw,56px); }
+    .intro-section h2, .agenda-panel h2, .register-copy h2 { max-width: 850px; margin-left: auto; margin-right: auto; text-align: center; font-size: clamp(31px,4vw,52px); font-weight: 500; letter-spacing: -.035em; line-height: 1.05; }
+    .value-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 18px; margin-top: 52px; }
+    .value-card { padding: 26px 22px; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,.72); box-shadow: 0 16px 44px rgba(26,62,122,.06); }
+    .icon-box { display: grid; place-items: center; width: 52px; height: 52px; margin-bottom: 24px; border: 1px solid rgba(34,119,255,.22); border-radius: 14px; background: #f7fbff; }
+    .value-card h3 { margin-bottom: 10px; font-size: 17px; }
+    .value-card p { margin-bottom: 0; color: var(--muted); line-height: 1.55; }
+    .agenda-section { padding-top: 26px; }
+    .agenda-panel, .register-section { border: 1px solid var(--line); border-radius: 24px; background: rgba(255,255,255,.82); box-shadow: 0 24px 70px rgba(26,62,122,.08); }
+    .agenda-panel { padding: clamp(30px,5vw,58px); }
+    .agenda-list { margin-top: 40px; display: grid; gap: 18px; }
+    .agenda-list article { display: grid; grid-template-columns: 110px minmax(0,1fr); gap: 22px; padding: 18px 0; border-top: 1px solid var(--line); }
+    .agenda-list time { color: var(--blue-deep); font-weight: 800; }
+    .agenda-list h3 { margin-bottom: 6px; font-size: 20px; }
+    .agenda-list p { margin-bottom: 0; color: var(--muted); line-height: 1.55; }
+    .register-section { display: grid; grid-template-columns: .9fr 1.1fr; gap: 46px; margin: 56px auto 90px; padding: clamp(26px,5vw,58px); }
+    .register-copy h2, .register-copy p { text-align: left; margin-left: 0; margin-right: 0; }
+    .register-copy p { color: var(--muted); font-size: 18px; line-height: 1.65; }
+    .registration-form { display: grid; gap: 18px; }
+    .form-row { display: grid; gap: 18px; }
+    .two-up { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    label { display: grid; gap: 8px; color: #253044; font-weight: 700; }
+    .field-label { display: inline-flex; align-items: baseline; gap: 2px; }
+    .field-label em { color: #778295; font-style: normal; font-weight: 400; }
+    .required-mark { color: var(--blue-deep); }
+    input, select, textarea { width: 100%; border: 1px solid rgba(21,40,76,.18); border-radius: 14px; background: #fff; color: var(--fg); padding: 15px 16px; }
+    textarea { resize: vertical; }
+    .website-field { display: none; }
+    .registration-form button { width: 100%; border: 0; cursor: pointer; font-size: 20px; }
+    .registration-form button:disabled { cursor: wait; opacity: .72; }
+    .form-status { min-height: 0; border-radius: 16px; font-size: 16px; line-height: 1.5; }
+    .form-status.error { padding: 16px 18px; background: #fff0ed; color: #a12b1b; }
+    .confirmation-card { display: flex; gap: 14px; padding: 18px; border: 1px solid rgba(21,87,192,.18); border-radius: 18px; background: #f1f7ff; color: #0b244b; }
+    .confirmation-icon { display: grid; place-items: center; width: 34px; height: 34px; flex: 0 0 auto; border-radius: 50%; background: var(--blue); color: #fff; font-weight: 800; }
+    .confirmation-card strong { display: block; margin-bottom: 4px; }
+    .confirmation-card p { margin: 0; color: #38506f; }
+    @media (max-width: 900px) {
+      .hero { min-height: auto; padding-bottom: 54px; }
+      .hero-content, .register-section { grid-template-columns: 1fr; }
+      .hero-content { padding-top: 76px; }
+      .event-meta, .value-grid { grid-template-columns: 1fr; }
+      .codex-visual { min-height: 260px; }
+      .glass-card { width: 220px; height: 176px; }
+      .card-one { right: 10px; top: 0; }
+      .card-two { right: 70px; top: 38px; }
+      .card-three { right: 130px; top: 76px; }
+      .terminal-mark { right: 155px; top: 110px; width: 72px; height: 72px; font-size: 31px; }
+    }
+    @media (max-width: 620px) {
+      .hero { padding: 22px 18px 46px; }
+      h1 { font-size: 56px; }
+      .two-up, .agenda-list article { grid-template-columns: 1fr; }
+      .agenda-list article { gap: 8px; }
+      .section, .register-section { padding-left: 18px; padding-right: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero" id="overview">
+      <div class="grid-overlay"></div>
+      <header class="nav-shell">
+        <a class="brand" href="#overview" aria-label="OpenAI event home">OpenAI Corp Dev</a>
+        <a class="nav-button" href="#register">Register</a>
+      </header>
+      <div class="hero-content">
+        <div class="hero-copy">
+          <h1>Building an AI-native Corp Dev Team</h1>
+          <p class="hero-subtitle">OpenAI Corp Dev team welcomes you to a hands on session to engage on how we can all use AI in real M&amp;A workflows.</p>
+          <div class="event-meta" aria-label="Event details">
+            <a class="event-tile" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Building%20an%20AI-native%20Corp%20Dev%20Team&amp;dates=20260623T230000Z/20260624T020000Z&amp;details=Private%20OpenAI-hosted%20Corp%20Dev%20peer-learning%20session%20on%20AI%20and%20Codex%20across%20real%20M%26A%20workflows.%20Seat%20confirmation%20will%20follow%20separately.&amp;location=OpenAI%20HQ%20MB2%2C%20San%20Francisco%2C%20CA" target="_blank" rel="noreferrer" aria-label="Add event to Google Calendar">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"></rect><path d="M7.5 3v4"></path><path d="M16.5 3v4"></path><path d="M3.5 9h17"></path></svg>
+              <span><strong>June 23, 2026</strong>Tuesday, 4:00-7:00 PM PT</span>
+            </a>
+            <a class="event-tile" href="https://www.google.com/maps/search/?api=1&amp;query=OpenAI%20MB2%20San%20Francisco" target="_blank" rel="noreferrer" aria-label="Open Google Maps for OpenAI HQ MB2">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 10.5c0 5.2-7 10-7 10s-7-4.8-7-10a7 7 0 1 1 14 0Z"></path><circle cx="12" cy="10.5" r="2.4"></circle></svg>
+              <span><strong>OpenAI HQ</strong>MB2, San Francisco</span>
+            </a>
+            <div class="event-tile">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 19v-1.2a3.8 3.8 0 0 0-3.8-3.8H7.8A3.8 3.8 0 0 0 4 17.8V19"></path><circle cx="10" cy="7.5" r="3"></circle><path d="M18 8v6"></path><path d="M15 11h6"></path></svg>
+              <span><strong>Invite-only</strong>Small informal learning session</span>
+            </div>
+          </div>
+        </div>
+        <div class="codex-visual" aria-hidden="true">
+          <div class="glass-card card-one"></div>
+          <div class="glass-card card-two"></div>
+          <div class="glass-card card-three"></div>
+          <div class="terminal-mark"><span>&gt;</span><span>_</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section intro-section">
+      <h2>Join OpenAI Corp Dev for a practical session on how AI can improve speed, rigor, and coverage across the full M&amp;A lifecycle.</h2>
+      <div class="value-grid">
+        <article class="value-card"><div class="icon-box"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m20 20-4.5-4.5"></path><circle cx="10.8" cy="10.8" r="6.3"></circle></svg></div><h3>OpenAI workflows</h3><p>See how OpenAI Corp Dev applies AI to practical work from strategy and scouting through deal execution, integration, and value creation.</p></article>
+        <article class="value-card"><div class="icon-box"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8.5 8-4 4 4 4"></path><path d="m15.5 8 4 4-4 4"></path><path d="m13.5 5-3 14"></path></svg></div><h3>Practitioner patterns</h3><p>Walk through reusable patterns, prompts, and operating rituals from OpenAI teams.</p></article>
+        <article class="value-card"><div class="icon-box"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 19v-1.4c0-2-1.6-3.6-3.6-3.6H7.6A3.6 3.6 0 0 0 4 17.6V19"></path><circle cx="10" cy="7" r="3"></circle><path d="M20 19v-1.2a3.4 3.4 0 0 0-2.4-3.2"></path><path d="M16.4 4.4a3 3 0 0 1 0 5.2"></path></svg></div><h3>Peer discussion</h3><p>Meet other Corp Dev professionals in the Bay Area to learn from each other.</p></article>
+        <article class="value-card"><div class="icon-box"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v4"></path><path d="M12 17v4"></path><path d="M3 12h4"></path><path d="M17 12h4"></path><path d="m6.3 6.3 2.8 2.8"></path><path d="m14.9 14.9 2.8 2.8"></path><path d="m17.7 6.3-2.8 2.8"></path><path d="m9.1 14.9-2.8 2.8"></path></svg></div><h3>Codex in context</h3><p>Hands on Codex tutorial for your team's AI adoption journey.</p></article>
+      </div>
+    </section>
+
+    <section class="section agenda-section" id="agenda">
+      <div class="agenda-panel">
+        <h2>Session agenda</h2>
+        <div class="agenda-list">
+          <article><time>4:00 PM</time><div><h3>Arrivals</h3><p>Check in, meet other local Corp Dev teams, and settle in.</p></div></article>
+          <article><time>4:15 PM</time><div><h3>Building an AI-native Corp Dev team</h3><p>OpenAI Corp Dev shares practical workflows across the M&amp;A lifecycle.</p></div></article>
+          <article><time>5:15 PM</time><div><h3>Break</h3><p>Reset before the Codex walkthrough.</p></div></article>
+          <article><time>5:30 PM</time><div><h3>Codex overview and practical walkthrough</h3><p>Concrete examples of how Codex can support real Corp Dev operating work.</p></div></article>
+          <article><time>6:15 PM</time><div><h3>Happy hour</h3><p>Peer discussion, Q&amp;A, and informal follow-up.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="register-section" id="register">
+      <div class="register-copy">
+        <h2>Save your spot</h2>
+        <p>Please RSVP by June 3. The team will follow up with confirmation details based on available capacity. We look forward to seeing you!</p>
+      </div>
+      <form class="registration-form" id="registration-form" aria-busy="false">
+        <label class="website-field" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+        <div class="form-row two-up">
+          <label><span class="field-label">First name<span class="required-mark" aria-hidden="true">*</span></span><input name="firstName" autocomplete="given-name" required></label>
+          <label><span class="field-label">Last name<span class="required-mark" aria-hidden="true">*</span></span><input name="lastName" autocomplete="family-name" required></label>
+        </div>
+        <label><span class="field-label">Work email<span class="required-mark" aria-hidden="true">*</span></span><input name="workEmail" type="email" autocomplete="email" required></label>
+        <div class="form-row two-up">
+          <label><span class="field-label">Company<span class="required-mark" aria-hidden="true">*</span></span><input name="company" autocomplete="organization" required></label>
+          <label><span class="field-label">Title<span class="required-mark" aria-hidden="true">*</span></span><input name="title" autocomplete="organization-title" required></label>
+        </div>
+        <label><span class="field-label">OpenAI host who invited you<span class="required-mark" aria-hidden="true">*</span></span><input name="invitedBy" autocomplete="off" maxlength="120" required></label>
+        <label><span class="field-label">Codex experience <em>(optional)</em></span><select name="codexExperience"><option value="None" selected>None</option><option value="Beginner">Beginner</option><option value="Intermediate">Intermediate</option><option value="Advanced">Advanced</option></select></label>
+        <label><span class="field-label">Dietary or accessibility notes <em>(optional)</em></span><textarea name="notes" rows="4" maxlength="1000"></textarea></label>
+        <button type="submit">Save your spot</button>
+        <div class="form-status" id="form-status" aria-live="polite" role="status" tabindex="-1"></div>
+      </form>
+    </section>
+  </main>
+  <script>
+    const googleForm = {
+      action: "https://docs.google.com/forms/d/e/1FAIpQLScwl8-FZ1mgNAMKGQtqsxmp2PRdkPJXodS9_LX7GXLWLh7LnA/formResponse",
+      fields: {
+        workEmail: "entry.1394492271",
+        firstName: "entry.727664131",
+        lastName: "entry.859328916",
+        company: "entry.695203081",
+        title: "entry.1329844106",
+        invitedBy: "entry.1104037685",
+        codexExperience: "entry.18744141",
+        notes: "entry.569885258"
+      }
+    };
+    const form = document.getElementById("registration-form");
+    const status = document.getElementById("form-status");
+    const validExperience = new Set(["None", "Beginner", "Intermediate", "Advanced"]);
+    function clean(value) { return typeof value === "string" ? value.trim() : ""; }
+    function emailOk(value) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value); }
+    function setStatus(type, message) {
+      status.className = "form-status " + type;
+      if (type === "success") {
+        status.innerHTML = '<div class="confirmation-card"><span class="confirmation-icon" aria-hidden="true">✓</span><div><strong>Registration request received</strong><p>' + message + "</p></div></div>";
+      } else {
+        status.textContent = message;
+      }
+      status.focus();
+    }
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const payload = {
+        firstName: clean(data.get("firstName")),
+        lastName: clean(data.get("lastName")),
+        workEmail: clean(data.get("workEmail")).toLowerCase(),
+        company: clean(data.get("company")),
+        title: clean(data.get("title")),
+        invitedBy: clean(data.get("invitedBy")),
+        codexExperience: clean(data.get("codexExperience")) || "None",
+        notes: clean(data.get("notes")),
+        website: clean(data.get("website"))
+      };
+      if (!payload.firstName || !payload.lastName || !payload.workEmail || !payload.company || !payload.title || !payload.invitedBy || !emailOk(payload.workEmail) || payload.website || !validExperience.has(payload.codexExperience)) {
+        setStatus("error", "Please check the required fields and use a valid work email.");
+        return;
+      }
+      form.setAttribute("aria-busy", "true");
+      form.querySelector("button").disabled = true;
+      form.querySelector("button").textContent = "Submitting...";
+      const outbound = new FormData();
+      outbound.append(googleForm.fields.workEmail, payload.workEmail);
+      outbound.append(googleForm.fields.firstName, payload.firstName);
+      outbound.append(googleForm.fields.lastName, payload.lastName);
+      outbound.append(googleForm.fields.company, payload.company);
+      outbound.append(googleForm.fields.title, payload.title);
+      outbound.append(googleForm.fields.invitedBy, payload.invitedBy);
+      outbound.append(googleForm.fields.codexExperience, payload.codexExperience);
+      outbound.append(googleForm.fields.notes, payload.notes);
+      try {
+        await fetch(googleForm.action, { method: "POST", mode: "no-cors", body: outbound });
+        form.reset();
+        setStatus("success", "Your registration request was submitted and recorded. You are not confirmed yet; we will follow up with seat confirmation details after review.");
+      } catch {
+        setStatus("error", "We could not submit your RSVP. Please try again, or contact your OpenAI host.");
+      } finally {
+        form.setAttribute("aria-busy", "false");
+        form.querySelector("button").disabled = false;
+        form.querySelector("button").textContent = "Save your spot";
+      }
+    });
+  </script>
+</body>
+</html>
