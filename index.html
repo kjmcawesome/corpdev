@@ -216,7 +216,7 @@
           <label><span class="field-label">Title<span class="required-mark" aria-hidden="true">*</span></span><input name="title" autocomplete="organization-title" required></label>
         </div>
         <label><span class="field-label">OpenAI host who invited you<span class="required-mark" aria-hidden="true">*</span></span><input name="invitedBy" autocomplete="off" maxlength="120" required></label>
-        <label><span class="field-label">Codex experience<span class="required-mark" aria-hidden="true">*</span></span><select name="codexExperience" required><option value="" selected disabled>Select one</option><option value="None">None</option><option value="Beginner">Beginner</option><option value="Intermediate">Intermediate</option><option value="Advanced">Advanced</option></select></label>
+        <label><span class="field-label">Codex experience<span class="required-mark" aria-hidden="true">*</span></span><select name="codexExperience" required aria-required="true"><option value="" selected disabled hidden>Select one</option><option value="None">None</option><option value="Beginner">Beginner</option><option value="Intermediate">Intermediate</option><option value="Advanced">Advanced</option></select></label>
         <label><span class="field-label">Dietary or accessibility notes <em>(optional)</em></span><textarea name="notes" rows="4" maxlength="1000"></textarea></label>
         <button type="submit">Save your spot</button>
         <div class="form-status" id="form-status" aria-live="polite" role="status" tabindex="-1"></div>
@@ -239,6 +239,7 @@
     };
     const form = document.getElementById("registration-form");
     const status = document.getElementById("form-status");
+    const codexExperienceSelect = form.querySelector('[name="codexExperience"]');
     const validExperience = new Set(["None", "Beginner", "Intermediate", "Advanced"]);
     function clean(value) { return typeof value === "string" ? value.trim() : ""; }
     function emailOk(value) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value); }
@@ -251,6 +252,12 @@
       }
       status.focus();
     }
+    codexExperienceSelect.addEventListener("invalid", () => {
+      setStatus("error", "Please select your Codex experience.");
+    });
+    codexExperienceSelect.addEventListener("change", () => {
+      codexExperienceSelect.setCustomValidity("");
+    });
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
       const data = new FormData(form);
